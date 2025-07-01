@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-  <title>Výber dátumov</title>
+  <title>Select Event Dates</title>
   <style>
     * {
       box-sizing: border-box;
@@ -15,7 +15,7 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      background: transparent;
+      background: #f7f7f7;
       width: 100%;
     }
 
@@ -23,7 +23,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 1em;
+      padding: 2em 1em 1em;
     }
 
     .form-box {
@@ -32,8 +32,8 @@
       border-radius: 12px;
       border: 2px solid #d1d1d1;
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-      width: calc(100% - 32px);
-      max-width: 380px;
+      width: 100%;
+      max-width: 400px;
     }
 
     label {
@@ -60,12 +60,12 @@
     }
 
     iframe {
-      width: 100%;
-      max-width: 800px;
-      height: 1200px;
-      border: none;
-      margin: 2rem auto;
       display: block;
+      margin: 0 auto;
+      border: none;
+      width: 100%;
+      max-width: 900px;
+      height: 1400px;
     }
 
     @media (max-width: 480px) {
@@ -83,27 +83,29 @@
   </style>
 </head>
 <body>
+
+  <!-- 🔹 Calendar Section -->
   <div class="form-wrapper">
     <div class="form-box">
-      <label for="eventDatesVisible">Vyber dátumy podujatia:</label>
-      <input type="text" id="eventDatesVisible" placeholder="Vyber jeden alebo viac dátumov" readonly />
+      <label for="eventDatesVisible">Select one or more event dates:</label>
+      <input type="text" id="eventDatesVisible" placeholder="Select one or more dates" readonly />
     </div>
   </div>
 
-  <iframe id="jotformFrame" src="https://form.jotform.com/251795329395067"></iframe>
+  <!-- 🔹 JotForm embedded below -->
+  <iframe id="jotformFrame" src="https://form.jotform.com/251795329395067" allowtransparency="true"></iframe>
 
   <script>
     const fp = flatpickr("#eventDatesVisible", {
       mode: "multiple",
       dateFormat: "d.m.Y",
-      locale: "sk",
       onChange: function(selectedDates, dateStr, instance) {
         const isoDates = selectedDates.map(date =>
           instance.formatDate(date, "Y-m-d")
         );
         const finalValue = isoDates.join(",");
 
-        // odoslanie do JotForm iframe
+        // Send to embedded JotForm
         const iframe = document.getElementById("jotformFrame");
         iframe.contentWindow.postMessage({
           type: "selectedDates",
