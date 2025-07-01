@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <title>Výber dátumov</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: transparent;
+      width: 100%;
+    }
+
+    .form-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1em;
+    }
+
+    .form-box {
+      background: white;
+      padding: 1.2em;
+      border-radius: 12px;
+      border: 2px solid #d1d1d1;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      width: calc(100% - 32px);
+      max-width: 380px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5em;
+      color: #003f7f;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1.5px solid #0050aa;
+      background-color: #fcfcff;
+    }
+
+    .flatpickr-calendar {
+      z-index: 9999 !important;
+      width: 100% !important;
+      max-width: 360px !important;
+      box-sizing: border-box;
+    }
+
+    iframe {
+      width: 100%;
+      max-width: 800px;
+      height: 1200px;
+      border: none;
+      margin: 2rem auto;
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .form-box {
+        width: calc(100% - 32px);
+        margin: 0 auto;
+      }
+
+      .flatpickr-calendar {
+        left: 0 !important;
+        right: 0 !important;
+        margin: 0 auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-wrapper">
+    <div class="form-box">
+      <label for="eventDatesVisible">Vyber dátumy podujatia:</label>
+      <input type="text" id="eventDatesVisible" placeholder="Vyber jeden alebo viac dátumov" readonly />
+    </div>
+  </div>
+
+  <iframe id="jotformFrame" src="https://form.jotform.com/251795329395067"></iframe>
+
+  <script>
+    const fp = flatpickr("#eventDatesVisible", {
+      mode: "multiple",
+      dateFormat: "d.m.Y",
+      locale: "sk",
+      onChange: function(selectedDates, dateStr, instance) {
+        const isoDates = selectedDates.map(date =>
+          instance.formatDate(date, "Y-m-d")
+        );
+        const finalValue = isoDates.join(",");
+
+        // odoslanie do JotForm iframe
+        const iframe = document.getElementById("jotformFrame");
+        iframe.contentWindow.postMessage({
+          type: "selectedDates",
+          value: finalValue
+        }, "*");
+      }
+    });
+  </script>
+</body>
+</html>
